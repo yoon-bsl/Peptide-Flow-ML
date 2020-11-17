@@ -69,10 +69,17 @@ def runSVM(dataFile, saveModel=False):
     print('Best Kernel Type: {}'.format(bestKernel))
     print('Best Scaler: {}'.format(bestX))
 
+    if bestX == 'StandardScaler':
+        returnScaler = sscaler
+    elif bestX == 'MinMaxScaler':
+        returnScaler = mscaler
+    else:
+        returnScaler = None
+
     bestModel = SVC(kernel=bestKernel, gamma=bestGamma, C=bestC)
     if saveModel:
         modelSVM = bestModel.fit(dependent[bestI], y)
-        return modelSVM
+        return modelSVM, returnScaler
     pred = cross_val_predict(bestModel, dependent[bestI], y)
 
     cm = confusion_matrix(y, pred)
@@ -110,7 +117,7 @@ def runSVM(dataFile, saveModel=False):
 
     plt.show()
 
-def predictFromModel(model):
+def predictFromModel(model, scalerType):
     print('Input new data (BP, D2, D3, D4, D, RE, RI)')
     print('to allow for prediction from best model:')
     print('')
@@ -121,11 +128,14 @@ def predictFromModel(model):
     d = float(input('D: '))
     re = float(input('RE: '))
     ri = float(input('RI: '))
+    dataInput = [[bp, d2, d3, d4, d, re, ri]]
+    if scalerType != None:
+        dataInput = scalerType.transform(dataInput)
     print('The model predicts that this data is class:')
-    print(model.predict([[bp, d2, d3, d4, d, re, ri]]))
+    print(model.predict(dataInput))
     print('-------------------------------------------')
 
 if __name__ == '__main__':
-    bestModel = runSVM('Prima_postech(remove_I)&D_v2(addedNewControl).csv', saveModel=True)
+    bestModel, scaler = runSVM(r'Data Files\Prima_postech(remove_I)_D_minus0.csv', saveModel=True)
     while True:
-        predictFromModel(bestModel)
+        predictFromModel(bestModel, scaler)
