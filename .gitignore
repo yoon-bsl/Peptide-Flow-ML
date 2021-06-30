@@ -1,3 +1,7 @@
+# Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope Process ; & ./venv/scripts/activate.ps1 ; Set-ExecutionPolicy -ExecutionPolicy Default -Scope Process
+
+
 Data Files
 .vscode
 venv
+temp
