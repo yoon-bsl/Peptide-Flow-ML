@@ -7,8 +7,9 @@ import sys
 
 def defineLane(start, end):
 	'''
-	Auxilliary function used to correctly determine which pixels to look at in the lane, regardless of whether the pixel 
-	numbers go from high to low or low to high
+	Auxilliary function used to correctly determine which pixels to look at in
+	the lane, regardless of whether the pixel numbers go from high to low or 
+	low to high
 	'''
 	points = []
 	temp = end - start
@@ -22,21 +23,27 @@ def defineLane(start, end):
 
 def flowAnalysis(videoName, location, start, end, axes='H', threshold=13):
 	'''
-	Given a video file, return a list of the flow profile of the moving front. Each index will represent a frame of the 
-	original video file, and its value will represent how many pixels the wetting front has flowed through
+	Given a video file, return a list of the flow profile of the moving front. 
+	Each index will represent a frame of the original video file, and its value 
+	will represent how many pixels the wetting front has flowed through
 
 	Parameters:
 	"videoName" = the file name of the video file
-	"Location" = if the axis is horizontal, then location is the pixel row containing the desired lane, while if the
-				 axis vertical, then location is the pixel column contained the desired lane
-	"start" = the starting pixel in the row/column (dictated by "Location" parameter) of the desired lane
-	"end" = the ending pixel in the row/column (dictated by the "Location" parameter) of the desired lane
-	"axes" = determines whether the desired flow lane is horizontal or vertical in the video file (MUST BE EITHER "H" OR "V")
+	"Location" = if the axis is horizontal, then location is the pixel row 
+		containing the desired lane, while if the axis vertical, then location 
+		is the pixel column contained the desired lane
+	"start" = the starting pixel in the row/column (dictated by "Location" 
+		parameter) of the desired lane
+	"end" = the ending pixel in the row/column (dictated by the "Location" 
+		parameter) of the desired lane
+	"axes" = determines whether the desired flow lane is horizontal or vertical 
+		in the video file (MUST BE EITHER "H" OR "V")
 	'''
 	
-	# NOTE: if you're not seeing any movement in your data, change this threshold value! It represents the brightness change
-	# in a pixel within the flow lane that is considered to be high enough to conclude that the moving front has moved to
-	# that location. 
+	# NOTE: if you're not seeing any movement in your data, change this 
+	# threshold value! It represents the brightness change in a pixel within 
+	# the flow lane that is considered to be high enough to conclude that the 
+	# moving front has moved to that location. 
 	threshold = threshold
 
 	possibleAxes = ['H', 'V']
@@ -48,7 +55,9 @@ def flowAnalysis(videoName, location, start, end, axes='H', threshold=13):
 	flowProfile = []
 	video = cv2.VideoCapture(videoName)
 	print('Video name: {}'.format(videoName))
-	print('Video length (frames): {}'.format(video.get(cv2.CAP_PROP_FRAME_COUNT)))
+	print('Video length (frames): {}'.format(
+		video.get(cv2.CAP_PROP_FRAME_COUNT)
+		))
 	success = True
 	imageNumber = 1
 	while success:
@@ -88,7 +97,9 @@ def flowAnalysis(videoName, location, start, end, axes='H', threshold=13):
 	print('Maximum flow (pixels): {}'.format(np.amax(flowProfile)))
 	videoFPS = video.get(cv2.CAP_PROP_FPS)
 	videoDuration = int(video.get(cv2.CAP_PROP_FRAME_COUNT)) / videoFPS
-	print('Total Velocity: {:2f}'.format(float(np.amax(flowProfile) / videoDuration)))
+	print('Total Velocity: {:2f}'.format(
+		float(np.amax(flowProfile) / videoDuration)
+		))
 	print('------------------')
 
 	plt.figure()
@@ -99,16 +110,21 @@ def flowAnalysis(videoName, location, start, end, axes='H', threshold=13):
 
 def exampleBounds(videoName, location, start, end, axes='H'):
 	'''
-	Given a video file, the function will save a grayscale image depicting where the analysis algorithm would consider
-	the lane to be (by using a solid black line over the first frame of the video)
+	Given a video file, the function will save a grayscale image depicting 
+	where the analysis algorithm would consider the lane to be (by using a 
+	solid black line over the first frame of the video)
 
 	Parameters:
 	"videoName" = the file name of the video file
-	"Location" = if the axis is horizontal, then location is the pixel row containing the desired lane, while if the
-				 axis vertical, then location is the pixel column contained the desired lane
-	"start" = the starting pixel in the row/column (dictated by "Location" parameter) of the desired lane
-	"end" = the ending pixel in the row/column (dictated by the "Location" parameter) of the desired lane
-	"axes" = determines whether the desired flow lane is horizontal or vertical in the video file (MUST BE EITHER "H" OR "V")
+	"Location" = if the axis is horizontal, then location is the pixel row 
+		containing the desired lane, while if the axis vertical, then location 
+		is the pixel column contained the desired lane
+	"start" = the starting pixel in the row/column (dictated by "Location" 
+		parameter) of the desired lane
+	"end" = the ending pixel in the row/column (dictated by the "Location" 
+		parameter) of the desired lane
+	"axes" = determines whether the desired flow lane is horizontal or vertical 
+		in the video file (MUST BE EITHER "H" OR "V")
 	'''
 	possibleAxes = ['H', 'V']
 	if axes not in possibleAxes:
@@ -128,13 +144,11 @@ def exampleBounds(videoName, location, start, end, axes='H'):
 
 
 if __name__ == '__main__':
-	os.chdir(os.path.join(r'C:\Users\alexd\Desktop\Sangsik Flow\8.24.20 Update'))
-##	testVideo = cv2.VideoCapture('E5_1.mp4')
-##	fps = testVideo.get(cv2.CAP_PROP_FPS)
-	
+	os.chdir(
+		os.path.join(r'C:\Users\alexd\Desktop\Sangsik Flow\8.24.20 Update')
+		)
 
 	# exampleBounds('D4 10^5_3.mp4', 600, 260, 500, axes='H')
-
 
 	flowAnalysis('D4 10^1_1.mp4', 800, 260, 500, axes='H', threshold=9)
 	flowAnalysis('D4 10^1_2.mp4', 720, 260, 500, axes='H', threshold=9)
